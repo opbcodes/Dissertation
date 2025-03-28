@@ -4,6 +4,8 @@ import pandas as pd
 file_path = "./datasets/global-energy-substitution.csv"  # Update with the actual file path
 df = pd.read_csv(file_path)
 
+# Drop irrelevant columns if they exist
+df = df.drop(columns=["Entity", "Code"], errors="ignore")
 # Drop rows with missing values
 df = df.dropna()
 
@@ -15,28 +17,30 @@ for col in df.columns:
     if col != "Year":
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
-# Drop rows with invalid years
 df = df.dropna(subset=["Year"])
-
-# Replace remaining NaN values with 0
 df = df.fillna(0)
 
-# Convert Year to int and set as index
 df["Year"] = df["Year"].astype(int)
 df.set_index("Year", inplace=True)
 
-# Ensure column names are strings (just in case)
 df.columns = df.columns.map(str)
 
+# Reverse column order so large sources are at the bottom
+columns_reversed = df.columns[::-1]
 # Plot
 plt.figure(figsize=(12, 6))
-plt.stackplot(df.index, *[df[col] for col in df.columns], labels=df.columns, alpha=0.7)
+plt.stackplot(df.index, *[df[col] for col in columns_reversed], labels=columns_reversed, alpha=0.7)
+# Reverse legend entries to match stack order
+handles, labels = plt.gca().get_legend_handles_labels()
+plt.legend(handles[::-1], labels[::-1], loc="upper left", bbox_to_anchor=(1, 1))
 
-# Labels and Title
 plt.xlabel("Year")
 plt.ylabel("Energy Consumption (TWh)")
 plt.title("Global Energy Consumption Trends Over Time")
-plt.legend(loc="upper left", bbox_to_anchor=(1, 1))
+# Reverse legend to match top-down order in stackplot
+handles, labels = plt.gca().get_legend_handles_labels()
+plt.legend(handles[::-1], labels[::-1], loc="upper left", bbox_to_anchor=(1, 1))
+
 plt.grid(True)
 
 # Set x-axis limits to dataset range
@@ -49,5 +53,4 @@ if df.index.max() not in ticks:
     ticks.append(df.index.max())
 plt.xticks(sorted(ticks))
 
-# Show Plot
 plt.show()
