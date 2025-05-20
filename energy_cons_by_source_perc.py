@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Load data
-file_path = "./datasets/global-energy-substitution.csv"  # Update if needed
+file_path = "./datasets/global-energy-substitution.csv"  
 df = pd.read_csv(file_path)
 
 # Drop irrelevant columns if they exist
