@@ -19,7 +19,7 @@ plt.plot(years, biomass, label="Traditional Biomass", color="red", linewidth=2)
 # Chart formatting
 plt.title("Coal vs Traditional Biomass Usage", fontsize=14)
 plt.xlabel("Year", fontsize=12)
-plt.ylabel("Energy Consumption (TWh, substituted)", fontsize=12)
+plt.ylabel("Energy Consumption (TWh)", fontsize=12)
 plt.grid(True, linestyle="--", alpha=0.6)
 plt.legend()
 plt.tight_layout()
